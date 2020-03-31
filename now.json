@@ -1,0 +1,19 @@
+{
+  "version": 2,
+  "name": "auth",
+  "env" : {
+    "MONGO_URI" : "@mongo_uri"
+  },
+  "builds": [
+    {
+      "src": "server.js",
+      "use": "@now/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "server.js"
+    }
+  ]
+}
