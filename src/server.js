@@ -40,12 +40,11 @@ const validateToken = (req, res) => { // funzione che controlla la validità del
     })
 }
 
-server.get('/', async (req, res) => {
-    const result = await database.get_all()
+server.get('/', (req, res) => {
     res.status(200).send({
         ok: true,
         data: {
-            result
+            message : "Benvenuto nel mio server"
         }
     })
 })
