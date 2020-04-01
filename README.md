@@ -12,4 +12,4 @@ Le chiamate che si possono effettuare a questo server sono :
 - post('/users/:username') => per effettuare il login di un utente (nel body della chiamata dovrà essere passata la password), la chiamata se andata a buon fine fornirà il token all'utente.
 
 ## Prova ora
-Il server è disponibile a questo [indirizzo](https://auth.paolocordioli.now.sh/ "https://auth.paolocordioli.now.sh/"). Per metterlo online è stato sfruttato Zeit e quindi i comandi [now](https://zeit.co/docs/now-cli#getting-started "now.cli"), sfruttando quindi i vantaggi che mette a disposizione ad esempio i [secrets](https://zeit.co/docs/v2/serverless-functions/env-and-secrets "secrets").
+Il server è disponibile a questo [indirizzo](https://autenticazione.now.sh/ "https://autenticazione.now.sh/"). Per metterlo online è stato sfruttato Zeit e quindi i comandi [now](https://zeit.co/docs/now-cli#getting-started "now.cli"), sfruttando quindi i vantaggi che mette a disposizione ad esempio i [secrets](https://zeit.co/docs/v2/serverless-functions/env-and-secrets "secrets").
