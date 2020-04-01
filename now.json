@@ -2,7 +2,8 @@
   "version": 2,
   "name": "auth",
   "env" : {
-    "MONGO_URI" : "@mongo_uri"
+    "MONGO_URI" : "@mongo_uri",
+    "SECRET" : "@secret"
   },
   "builds": [
     {

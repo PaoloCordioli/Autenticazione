@@ -27,10 +27,15 @@ class mongoDB {
         return users
     }
 
-    async get_user_by_name(find) {
+    async get_user_by_name(username) {
         const database = await this.connect()
-        const user = await database.find({ name: find }).toArray()
+        const user = await database.findOne({ username : username })
         return user
+    }
+
+    async add_user(user){
+        const database = await this.connect()
+        database.insertOne(user)
     }
 }
 
