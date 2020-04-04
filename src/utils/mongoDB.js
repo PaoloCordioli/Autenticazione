@@ -13,10 +13,7 @@ class mongoDB {
         }
 
         const client = await MongoClient.connect(this.url, { useNewUrlParser: true, useUnifiedTopology: true })
-        const db = await client.db(this.db_name)
-        const collection = await db.collection(this.db_collection)
-
-        this.instance = collection
+        this.instance = client.db(this.db_name).collection(this.db_collection)
 
         return this.instance
     }
