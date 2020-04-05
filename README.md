@@ -6,7 +6,6 @@ Il server è stato creato grazie ad [Express.js](https://expressjs.com/it/ "Expr
 
 ### Dettagli
 Le chiamate che si possono effettuare a questo server sono :
-- get('/') => per visualizzare tutti gli utenti
 - get('/authentication') => per validare il token dell'utente(il token dovrà essere passato nell'header della chiamata come 'x-access-token');
 - post('/users') => per registare un nuovo utente ( nel body della chiamata dovranno essere forniti username e password);
 - post('/users/:username') => per effettuare il login di un utente (nel body della chiamata dovrà essere passata la password), la chiamata se andata a buon fine fornirà il token all'utente.
