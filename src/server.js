@@ -4,7 +4,7 @@ const helmet = require('helmet');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const cors = require('cors');
-const mongoDB = require('./utils/mongoDB')
+const database = require('./utils/mongoDB')
 
 const server = express()
 
@@ -13,7 +13,7 @@ server.use(express.json())
 server.use(helmet())
 server.use(morgan('dev'))
 
-const database = new mongoDB(process.env.MONGO_URI, "auth", "users")
+
 
 const validateToken = (req, res) => { // funzione che controlla la validità del token
     const token = req.headers['x-access-token']
