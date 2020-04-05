@@ -15,7 +15,16 @@ server.use(morgan('dev'))
 
 
 
-const validateToken = (req, res) => { // funzione che controlla la validità del token
+server.get('/', (req, res) => {
+    res.status(200).send({
+        ok: true,
+        data: {
+            message: "Benvenuto nel mio server"
+        }
+    })
+})
+
+server.get('/authentication', function (req, res) { // verifica la validità del token
     const token = req.headers['x-access-token']
     if (!token) {
         res.status(404).send({
@@ -35,22 +44,10 @@ const validateToken = (req, res) => { // funzione che controlla la validità del
                     err: "token error"
                 }
             })
-            return
         }
+        return
     })
-}
 
-server.get('/', (req, res) => {
-    res.status(200).send({
-        ok: true,
-        data: {
-            message : "Benvenuto nel mio server"
-        }
-    })
-})
-
-server.get('/authentication', function (req, res) { // verifica la validità del token
-    validateToken(req, res)
     res.status(200).send({
         ok: true,
         data: {

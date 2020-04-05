@@ -1,24 +1,31 @@
 const MongoClient = require('mongodb').MongoClient
 
 class mongoDB {
-    
-    constructor(url, db_name, db_collection ) {
-        const client = await MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true })
-        this.instance = client.db(db_name).collection(db_collection)
+
+    constructor(url, db_name, db_collection) {
+        this.init(url, db_name, db_collection)
+    }
+
+    async init (url, db_name, db_collection) {
+        if(!mongoDB.instance){
+            const client = await MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true })
+            mongoDB.instance = client.db(db_name).collection(db_collection)
+        }
+        return mongoDB.instance
     }
 
     async get_all() {
-        const users = await this.instance.find().toArray()
+        const users = await mongoDB.instance.find().toArray()
         return users
     }
 
     async get_user_by_name(username) {
-        const user = await this.instance.findOne({ username : username })
+        const user = await mongoDB.instance.findOne({ username : username })
         return user
     }
 
     async add_user(user){
-        this.instance.insertOne(user)
+        mongoDB.instance.insertOne(user)
     }
 }
 
