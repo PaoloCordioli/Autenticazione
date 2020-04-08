@@ -1,19 +1,47 @@
-const express = require('express')
-const morgan = require('morgan')
-const helmet = require('helmet');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const cors = require('cors');
-const database = require('./utils/mongoDB')
+import express from "express";
+import morgan from 'morgan'
+import helmet from 'helmet'
+import bcrypt from 'bcryptjs'
+import jwt from 'jsonwebtoken'
+import cors from 'cors'
+import { MongoDB } from './utils/mongoDB'
 
-const server = express()
-
+const server = express();
 server.use(cors())
 server.use(express.json())
 server.use(helmet())
 server.use(morgan('dev'))
 
-server.get('/', (req, res) => {
+
+const validateToken = (req: any, res: any): boolean => { // funzione che controlla la validità del token
+    const token = req.headers['x-access-token']
+    if (!token) {
+        res.status(404).send({
+            ok: false,
+            data: {
+                err: "unauthorized"
+            }
+        })
+        return false
+    }
+
+    jwt.verify(token, process.env.SECRET, (err: any, decoded: any) => {
+        if (err) {
+            res.status(404).send({
+                ok: false,
+                data: {
+                    err: "token error"
+                }
+            })
+            return false
+        }
+    })
+
+    return true
+}
+
+server.get('/', async (req, res) => {
+    const database = await MongoDB.get_instance()
     res.status(200).send({
         ok: true,
         data: {
@@ -23,29 +51,8 @@ server.get('/', (req, res) => {
 })
 
 server.get('/authentication', function (req, res) { // verifica la validità del token
-    const token = req.headers['x-access-token']
-    if (!token) {
-        res.status(404).send({
-            ok: false,
-            data: {
-                err: "unauthorized"
-            }
-        })
+    if (!validateToken(req, res))
         return
-    }
-
-    jwt.verify(token, process.env.SECRET, (err, decoded) => {
-        if (err) {
-            res.status(404).send({
-                ok: false,
-                data: {
-                    err: "token error"
-                }
-            })
-        }
-        return
-    })
-
     res.status(200).send({
         ok: true,
         data: {
@@ -55,6 +62,8 @@ server.get('/authentication', function (req, res) { // verifica la validità del
 });
 
 server.post('/users', async (req, res) => { // crea un utente
+    const database = await MongoDB.get_instance()
+
     const { username, password } = req.body
     const hashedPassword = await bcrypt.hash(password, 8)
 
@@ -86,11 +95,12 @@ server.post('/users', async (req, res) => { // crea un utente
 });
 
 server.post('/users/:username', async (req, res) => { // permette il login e genera un token
+    const database = await MongoDB.get_instance()
+
     const password = req.body.password
     const username = req.params.username
 
     const user = await database.get_user_by_name(username)
-
 
     // controlla che l'utete esiste
     if (user) {
@@ -105,16 +115,17 @@ server.post('/users/:username', async (req, res) => { // permette il login e gen
                     token,
                 }
             })
-        } // se non sono uguali viene mandato un messaggio di errore
-        else {
-            res.status(404).send({
-                ok: false,
-                data: {
-                    token: '',
-                    err: 'error with password'
-                }
-            })
+            return
         }
+         // se non sono uguali viene mandato un messaggio di errore
+        res.status(404).send({
+            ok: false,
+            data: {
+                token: '',
+                err: 'error with password'
+            }
+        })
+        return
     }
     // se l'utente non esiste viene mandato un messaggio di errore
     else res.status(404).send({
@@ -124,7 +135,6 @@ server.post('/users/:username', async (req, res) => { // permette il login e gen
             err: 'error with username'
         }
     })
-
 })
 
 module.exports = server
